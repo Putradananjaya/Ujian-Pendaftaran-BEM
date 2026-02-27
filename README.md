@@ -1,50 +1,59 @@
-# LEMBAR TUGAS UJI KOMPETENSI: REKAYASA PERANGKAT LUNAK (SOFTWARE ENGINEERING)
+# 🛠️ Ujian Praktik Analis Program
 
-## 📌 SITUATION (SITUASI)
-
-Anda sedang mengikuti uji kompetensi untuk skema **Rekayasa Perangkat Lunak (_Software Engineering_)**. Anda ditugaskan untuk mengambil alih _source code_ aplikasi **"Sistem Pendaftaran"** (tautan referensi proyek: [Ujian-Pendaftaran-App](https://go.psti.undiknas.ac.id/OkupasiAnalisProgram)) yang belum selesai dikembangkan oleh tim sebelumnya.
-
-Saat ini, aplikasi tersebut memiliki beberapa masalah kritis:
-
-- Data pendaftar gagal tersimpan ke _database_ (terdapat _error_ pada logika dan _query_).
-- Penulisan kode berantakan, rentan terhadap celah keamanan (_SQL Injection_), dan sulit dibaca.
-- Aplikasi mengalami _bottleneck_ performa (sangat lambat saat memuat daftar ribuan pendaftar).
-- Belum ada implementasi pengujian (_testing_) dan dokumentasi teknis sama sekali.
+**Skema Sertifikasi:** Rekayasa Perangkat Lunak (Analis Program)  
+**Waktu Pengerjaan:** 120 Menit  
 
 ---
 
-## 🎯 TASK (TUGAS)
+## 📖 Skenario (Situation)
 
-Dalam batas waktu **120 menit**, Anda diminta untuk mereviu dan memperbaiki _bug_, memastikan sistem terhubung ke _database_ dengan aman, menguji alur kerja aplikasi secara otomatis, mengoptimalkan kecepatan muat data, serta menyusun dokumentasi kodenya.
+Anda baru saja dipekerjakan sebagai **Analis Program** untuk mengambil alih *source code* aplikasi "Sistem Pendaftaran" dari *programmer* sebelumnya. Sayangnya, aplikasi ini belum selesai dan memiliki banyak masalah kritikal:
+
+1. Tidak ada penanganan *error* pada koneksi *database*.
+2. Formulir pendaftaran sangat rentan terhadap serangan **SQL Injection**.
+3. Aplikasi gagal (*crash*) jika pengguna mengirimkan formulir kosong.
+4. Halaman utama sangat lambat (membutuhkan waktu lama untuk memuat data) karena masalah skalabilitas performa pada kueri basis data.
+5. Kode tidak memiliki komentar teknis yang memadai.
+
+## 🎯 Tugas Anda (Task)
+
+Sebagai Analis Program, tugas Anda adalah mereviu, memperbaiki, menguji, dan mendokumentasikan sistem ini sesuai dengan Standar Kompetensi Kerja Nasional Indonesia (SKKNI).
+
+## 🚀 Langkah Kerja (Action)
+
+### Tahap 1: Setup Lingkungan Kerja
+1. Buka terminal di GitHub Codespaces.
+2. Jalankan perintah ini untuk menginisialisasi basis data dan data *dummy*:
+    ```bash
+    php setup.php
+    ```
+3. Jalankan server lokal PHP untuk melihat antarmuka aplikasi:
+    ```bash
+    php -S localhost:8000 -t src/
+    ```
+4. Buka aplikasi di *browser* Codespaces Anda.
+
+### Tahap 2: Perbaikan Bug & Keamanan (Debugging & SQL)
+1. Buka `src/database.php`. Aktifkan mode penanganan *Exception* pada koneksi PDO.
+2. Buka `src/proses.php`. 
+    * Tambahkan logika validasi: Jika input kosong, batalkan eksekusi.
+    * Amankan kueri DML dengan mengubahnya menjadi **Prepared Statements** agar terhindar dari injeksi.
+    * Bungkus eksekusi dengan blok `try-catch`.
+
+### Tahap 3: Optimasi Performa (Profiling & Skalabilitas)
+1. Buka `src/index.php`. 
+2. Tambahkan fungsi `microtime(true)` di awal dan akhir *script* untuk melihat waktu eksekusi halaman.
+3. Anda akan menemukan **N+1 Query Problem** di dalam *looping* tabel. Hapus kueri di dalam *looping* tersebut dan gabungkan kueri menggunakan `JOIN` pada kueri utama agar halaman memuat ribuan data dalam hitungan milidetik.
+
+### Tahap 4: Dokumentasi & Pengajuan
+1. Tambahkan komentar penjelasan (*comment*) yang baik pada setiap baris kode krusial yang baru saja Anda ubah.
+2. Lakukan *Commit* dan *Push* pekerjaan Anda ke repositori GitHub.
 
 ---
 
-## 🛠️ ACTION (TINDAKAN)
+## ✅ Indikator Keberhasilan (Result)
 
-### Fasilitas & Akses:
-
-Anda diberikan akses penuh menuju:
-
-1. **Tautan Repository GitHub "Sistem Pendaftaran"** (menggunakan fitur _GitHub Template_) yang berisi _source code_ awal dan _database_ sampel.
-2. **Lingkungan kerja awan GitHub Codespaces** yang sudah dilengkapi dengan IDE (_Visual Studio Code_), _Visual Debugger_, dan terminal terintegrasi untuk proses _Profiling_.
-3. **Daftar skenario Unit Test dan Integration Test** yang telah disiapkan dan dapat dieksekusi langsung melalui terminal.
-
-### Langkah Pengerjaan (Mencakup 10 Unit Kompetensi):
-
-- **(Code Review):** Membaca, menganalisis, dan merapikan _source code_ awal yang penulisan sintaksnya belum standar.
-- **(Algoritma & Debugging):** Mencari penyebab kegagalan saat proses simpan data dan memperbaiki logika algoritmanya.
-- **(SQL & Akses Basis Data):** Memperbaiki perintah SQL agar aman dari injeksi dan memastikan aplikasi berhasil melakukan operasi baca/tulis ke _database_.
-- **(Unit & Integrasi Program):** Menjalankan dan meluluskan pengujian per modul (fungsi simpan data) serta pengujian integrasi (alur pendaftaran dari form HTML hingga tampil di tabel data).
-- **(Profiling & Skalabilitas):** Menggunakan alat ukur waktu eksekusi untuk menemukan penyebab lambatnya aplikasi, melakukan optimasi kueri, dan menuliskan rekomendasi teknis agar aplikasi tidak _crash_ ketika diakses pengguna secara masif.
-- **(Dokumen Kode):** Menambahkan blok komentar/penjelasan pada _source code_ agar alurnya mudah dipahami oleh _developer_ selanjutnya.
-
----
-
-## 🏆 RESULT (HASIL AKHIR)
-
-Pada akhir sesi, Anda diwajibkan untuk mendemonstrasikan dan menyerahkan hasil berikut kepada Asesor:
-
-1. **Aplikasi Berjalan Lancar:** Mendemonstrasikan secara langsung bahwa sistem telah mampu menyimpan data baru secara valid dan memuat daftar peserta dengan kecepatan optimal.
-2. **Bukti Pengujian:** Menyerahkan laporan (_screenshot_ terminal) yang membuktikan seluruh Uji Unit dan Uji Integrasi berstatus **Passed/Berhasil** (hijau).
-3. **Laporan Performa & Skalabilitas:** Menyusun dokumen ringkas (di dalam file `README.md` pada bagian laporan asesi) yang memuat data perbandingan kecepatan muat aplikasi (sebelum vs. sesudah optimasi) dan analisis ketahanan sistem.
-4. **Source Code Terdokumentasi:** Menyerahkan tautan repositori berisi _file_ kode final yang rapi, aman, dan memuat dokumentasi/komentar teknis.
+- [ ] Aplikasi berjalan normal dan data berhasil disimpan.
+- [ ] Kueri bebas dari celah *SQL Injection*.
+- [ ] Waktu muat halaman (*load time*) terbukti jauh lebih cepat setelah kueri dioptimasi (*JOIN*).
+- [ ] File kode program memiliki dokumentasi yang jelas.
